@@ -10,7 +10,7 @@ function crosswordSolver(puzzle, wordList) {
         for (let char of rowChars) {
             if (char !== '.' && char !== '\n') {
                 if (isNaN(parseInt(char))) {
-                    console.log('Error: Invalid character');
+                    console.error('Error: Invalid character');
                     return;
                 }
                 wordCount += parseInt(char);
@@ -20,7 +20,7 @@ function crosswordSolver(puzzle, wordList) {
         }
         // Compare wordCount with the sum of actual words and empty spaces
         if (wordCount > row.length - emptyCount) {
-            console.log('Error: Invalid word count');
+            console.error('Error: Invalid word count');
             return;
         }
     }
@@ -36,7 +36,7 @@ function crosswordSolver(puzzle, wordList) {
         for (let char of col) {
             if (char !== '.' && char !== '\n') {
                 if (isNaN(parseInt(char))) {
-                    console.log('Error: Invalid character');
+                    console.error('Error: Invalid character');
                     return;
                 }
                 wordCount += parseInt(char);
@@ -46,46 +46,45 @@ function crosswordSolver(puzzle, wordList) {
         }
         // Compare wordCount with the sum of actual words and empty spaces
         if (wordCount > col.length - emptyCount) {
-            console.log('Error: Invalid word count');
+            console.error('Error: Invalid word count');
             return;
         }
     }
 
-    // Check the words in the wordList
+    // Check the words in the wordList for duplicates
     const usedWords = new Set();
     for (let word of wordList) {
         if (usedWords.has(word)) {
-            console.log('Error: Duplicate word');
+            console.error('Error: Duplicate word');
             return;
         }
         usedWords.add(word);
     }
 
-
- // Fill the puzzle with the words from the wordList
-let index = 0;
-const filledPuzzle = rows.map(row => {
-    let filledRow = '';
-    let currentWordIndex = 0;
-    for (let i = 0; i < row.length; i++) {
-        const char = row[i];
-        if (char === '.') {
-            filledRow += '.';
-        } else if (char === '\n') {
-            filledRow += '\n';
-            currentWordIndex = 0; // Reset currentWordIndex at new line
-        } else {
-            if (currentWordIndex < parseInt(char)) {
-                const word = wordList[index++];
-                filledRow += word;
-                currentWordIndex++;
-            } else {
+    // Fill the puzzle with the words from the wordList
+    let index = 0;
+    const filledPuzzle = rows.map(row => {
+        let filledRow = '';
+        let currentWordIndex = 0;
+        for (let i = 0; i < row.length; i++) {
+            const char = row[i];
+            if (char === '.') {
                 filledRow += '.';
+            } else if (char === '\n') {
+                filledRow += '\n';
+                currentWordIndex = 0; // Reset currentWordIndex at new line
+            } else {
+                if (currentWordIndex < parseInt(char)) {
+                    const word = wordList[index++];
+                    filledRow += word;
+                    currentWordIndex++;
+                } else {
+                    filledRow += '.';
+                }
             }
         }
-    }
-    return filledRow;
-}).join('\n');
+        return filledRow;
+    }).join('\n');
 
     console.log(filledPuzzle);
 }
